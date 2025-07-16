@@ -64,7 +64,8 @@ src/
 │   └── s3/
 ├── main.ts                 # Application entrypoint
 
----
+```
+
 
 ## 📦 Tech Stack
 
@@ -78,22 +79,24 @@ src/
 - **TypeORM** – ORM for PostgreSQL
 - **Yarn** – Package management
 
----
-## ❌ What’s Removed (For Confidentiality)
-	- •	Actual DTOs, controllers, and services
-	- •	Business logic and API implementations
-	- •	Authentication and authorization flows
-	- •	Client credentials, secrets, and environment configs
-	- •	Private S3 buckets or file upload integrations
 
----
+
+## ❌ What’s Removed (For Confidentiality)
+- •	Actual DTOs, controllers, and services
+- •	Business logic and API implementations
+- •	Authentication and authorization flows
+- •	Client credentials, secrets, and environment configs
+- •	Private S3 buckets or file upload integrations
+
+
 
 ## Used as:
-	- •	A starter kit for large-scale backend development
-	- •	A demonstration of production-ready NestJS code structure
-	- •	A boilerplate for communication apps (chat, calling, wallet, etc.)
-  
+- •	A starter kit for large-scale backend development
+- •	A demonstration of production-ready NestJS code structure
+- •	A boilerplate for communication apps (chat, calling, wallet, etc.)
+
 ---
+
 ## 🙋‍♂️ Support or Questions
 
 ***If you have any questions about the structure or how to use this skeleton for your own project, feel free to open an issue or reach out***.

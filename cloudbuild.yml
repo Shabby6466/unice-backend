@@ -1,0 +1,59 @@
+steps:
+  # Step 1: Build Docker image with commit SHA in the tag
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/${_PROJECT_ID}/${_IMAGE_NAME}:${SHORT_SHA}', '.']
+
+  # Step 2: Push Docker image to Google Container Registry with the commit SHA in the tag
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/${_PROJECT_ID}/${_IMAGE_NAME}:${SHORT_SHA}']
+
+  # Step 3: SSH into EC2 and pull the new image, stop and redeploy the container
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        # SSH into EC2
+        gcloud compute ssh ${_EC2_USER}@${_EC2_INSTANCE} --zone=${_ZONE} --project=${_PROJECT_ID} --command="
+          # Pull the latest Docker image with commit SHA
+          docker pull gcr.io/${_PROJECT_ID}/${_IMAGE_NAME}:${SHORT_SHA} &&
+        
+          # Stop and remove the existing container
+          docker stop ${_CONTAINER_NAME} || true &&
+          docker rm ${_CONTAINER_NAME} || true &&
+
+          # Run the new container with the new image
+          docker run -v ${_ENV_PATH}/.env:/app/.env -v ${_ENV_PATH}/service-account.json:/app/service-account.json -d --name ${_CONTAINER_NAME} -p ${_PORT}:${_INTERNAL_PORT} --restart unless-stopped gcr.io/${_PROJECT_ID}/${_IMAGE_NAME}:${SHORT_SHA}
+        "
+
+  # Step 4: Send a Discord notification about successful deployment
+  - name: 'curlimages/curl'  # Using a Docker image for curl
+    entrypoint: 'curl'
+    args:
+      [
+        '-X', 'POST', '${_DISCORD_WEBHOOK_URL}',
+        '-H', 'Content-Type: application/json',
+        '-d', '{
+                "content": "Deployment successful! Container `${_CONTAINER_NAME}` is now running version `${SHORT_SHA}` on EC2 instance `${_EC2_INSTANCE}`."
+              }'
+      ]
+
+images:
+  - 'gcr.io/${_PROJECT_ID}/${_IMAGE_NAME}:${SHORT_SHA}'
+
+# Define environment variables for substitution
+substitutions:
+  _PROJECT_ID: "default-project-id"
+  _IMAGE_NAME: "default-image-name"
+  _CONTAINER_NAME: "default-container-name"
+  _PORT: "80"
+  _INTERNAL_PORT: "80"
+  _EC2_USER: "ec2-user"
+  _EC2_INSTANCE: "default-ec2-instance"
+  _ZONE: "us-central1-a"
+  _DISCORD_WEBHOOK_URL: "https://discord.com/api/webhooks/your-webhook-url"
+  _ENV_PATH: "default-env-path"
+
+# Use the built-in commit SHA substitution
+available_substitutions:
+  SHORT_SHA: ${COMMIT_SHA:0:7}

@@ -1,0 +1,28 @@
+{
+  "type": "call.session_participant_left",
+  "created_at": "2025-05-07T19:19:26.160647682Z",
+  "call_cid": "default:unique-1746645344233",
+  "session_id": "df53ec9c-9e92-469d-bf95-1fff618922c7",
+  "participant": {
+    "user": {
+      "id": "16849a14-fc62-4acc-aa3c-83c30f3017e4",
+      "name": "Can",
+      "image": "https://unice-live.s3.us-west-1.amazonaws.com/media/79269ff7-2d5e-4003-9aa9-e9a12cc30610.jpg",
+      "language": "",
+      "role": "user",
+      "teams": [],
+      "created_at": "2025-05-07T15:36:21.715945Z",
+      "updated_at": "2025-05-07T15:36:52.166968Z",
+      "banned": false,
+      "online": false,
+      "last_active": "2025-05-07T19:19:18.128155631Z",
+      "blocked_user_ids": [],
+      "shadow_banned": false,
+      "invisible": false
+    },
+    "user_session_id": "27fa1b19-ff66-4f8a-9759-222d6f1664d6",
+    "role": "user",
+    "joined_at": "2025-05-07T19:19:26.160632404Z"
+  },
+  "duration_seconds": 217
+}
